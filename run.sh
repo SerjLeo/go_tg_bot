@@ -1,1 +1,1 @@
-go run ./cmd/bot/main.go
+export TOKEN=5670455458:AAFlIJZt7qgQpi-r8qE0g6OFXP1d71jOCT8 && go run ./cmd/bot/main.go

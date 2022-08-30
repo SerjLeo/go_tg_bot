@@ -1,6 +1,8 @@
 package main
 
 import (
+	"github.com/serjleo/go_tg_bot/internal/app/router"
+	"github.com/serjleo/go_tg_bot/internal/service/product"
 	"log"
 	"os"
 
@@ -8,12 +10,17 @@ import (
 )
 
 func main() {
-	token := os.Getenv("token")
+	token := os.Getenv("TOKEN")
 
 	bot, err := tgbotapi.NewBotAPI(token)
 	if err != nil {
 		log.Panic(err)
 	}
+
+	productService := product.NewService()
+	router := router.NewCommandRouter(
+		bot, productService,
+	)
 
 	bot.Debug = true
 
@@ -26,11 +33,8 @@ func main() {
 
 	for update := range updates {
 		if update.Message != nil { // If we got a message
-			log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
+			router.Process(update)
 
-			msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
-
-			bot.Send(msg)
 		}
 	}
 }
